@@ -5,20 +5,28 @@ import Modal from "./modal";
 import { useState } from "react";
 import { addContact } from "@/api";
 import { useRouter } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
+import { splitName } from "@/utils";
 
 const AddContact = () => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
-  const [newContactValue, setNewContactValue] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [age, setAge] = useState(null);
+  const [photo, setPhoto] = useState("");
 
   const handleSubmitNewContact = async (e) => {
     e.preventDefault();
+    const { firstName, lastName } = splitName(fullName);
+
     await addContact({
-      id: uuidv4(),
-      text: newContactValue,
+      firstName,
+      lastName,
+      age,
+      photo,
     });
-    setNewContactValue("");
+    setFullName("");
+    setAge(null);
+    setPhoto("");
     setModalOpen(false);
     router.refresh();
   };
@@ -36,17 +44,30 @@ const AddContact = () => {
       </button>
       <Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
         <form onSubmit={handleSubmitNewContact}>
-          <h3 className="font-bold text-lg">Add New Contact</h3>
-
-          <div className="modal-action">
+          <h3 className="font-bold text-lg mb-3">Add New Contact</h3>
+          <div className="flex flex-col gap-y-4">
             <input
               type="text"
-              value={newContactValue}
-              onChange={(e) => setNewContactValue(e.target.value)}
-              placeholder="Type here"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Fullname"
               className="input input-bordered w-full"
             />
-
+            <input
+              type="number"
+              value={age}
+              min="1"
+              onChange={(e) => setAge(e.target.value)}
+              placeholder="Age"
+              className="input input-bordered w-full"
+            />
+            <input
+              type="text"
+              value={photo}
+              onChange={(e) => setPhoto(e.target.value)}
+              placeholder="Photo URL"
+              className="input input-bordered w-full"
+            />
             <button type="submit" className="btn">
               Submit
             </button>

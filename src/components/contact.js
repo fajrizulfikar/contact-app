@@ -3,7 +3,7 @@
 import { FiEdit } from "react-icons/fi";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useState } from "react";
-import Modal from "./Modal";
+import Modal from "./modal";
 import { useRouter } from "next/navigation";
 import { editContact, deleteContact } from "@/api";
 
