@@ -11,14 +11,11 @@ const Contact = ({ contact }) => {
   const router = useRouter();
   const [openModalEdit, setOpenModalEdit] = useState(false);
   const [openModalDeleted, setOpenModalDeleted] = useState(false);
-  const [contactToEdit, setContactToEdit] = useState(contact?.text);
+  const [contactToEdit, setContactToEdit] = useState(contact);
 
   const handleSubmitEditContact = async (e) => {
     e.preventDefault();
-    await editContact({
-      id: contact.id,
-      text: contactToEdit,
-    });
+    await editContact(contact);
 
     setOpenModalEdit(false);
     router.refresh();
@@ -30,12 +27,25 @@ const Contact = ({ contact }) => {
     router.refresh();
   };
 
+  const fullName = `${contact.firstName}${contact?.lastName ?? ""}`;
+
   return (
     <tr key={contact?.id}>
       <td className="w-full">
-        <span> {contact?.text}</span>
+        <div className="flex items-center gap-4">
+          <div className="avatar">
+            <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+              {/* had to use native img because next.js didn't allow cross-origin src in image */}
+              <img
+                src={contact.photo}
+                alt="Avatar"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </div>
+          </div>
+          <span>{fullName}</span>
+        </div>
       </td>
-
       <td className="flex gap-5">
         <span
           onClick={() => setOpenModalEdit(true)}
@@ -73,7 +83,7 @@ const Contact = ({ contact }) => {
           </h3>
           <div className="modal-action">
             <button
-              onClick={() => handleDeleteContact(contact.id)}
+              onClick={() => handleDeleteContact(contact?.id)}
               className="btn"
             >
               Yes

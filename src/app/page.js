@@ -1,7 +1,11 @@
+import { getContacts } from "@/api";
 import AddContact from "@/components/add-contact";
 import ContactList from "@/components/contact-list";
 
 export default async function Home() {
+  const getContactsRes = await getContacts();
+  const contacts = getContactsRes?.data;
+
   return (
     <main className="max-w-4xl mx-auto mt-4">
       <div className="text-center my-5 flex flex-col gap-4">
@@ -9,7 +13,7 @@ export default async function Home() {
         <AddContact />
       </div>
       <div className="text-center">
-        <ContactList contacts={[]} />
+        <ContactList contacts={contacts} />
       </div>
     </main>
   );
