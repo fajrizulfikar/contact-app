@@ -6,6 +6,7 @@ import { useState } from "react";
 import Modal from "./modal";
 import { useRouter } from "next/navigation";
 import { editContact, deleteContact } from "@/api";
+import { getFullName } from "@/utils";
 
 const Contact = ({ contact }) => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const Contact = ({ contact }) => {
     router.refresh();
   };
 
-  const fullName = `${contact.firstName}${contact?.lastName ?? ""}`;
+  const fullName = getFullName(contact.firstName, contact.lastName);
 
   return (
     <tr key={contact?.id}>
@@ -56,15 +57,47 @@ const Contact = ({ contact }) => {
         <Modal modalOpen={openModalEdit} setModalOpen={setOpenModalEdit}>
           <form onSubmit={handleSubmitEditContact}>
             <h3 className="font-bold text-lg">Edit Contact</h3>
-            <div className="modal-action">
+            <div className="flex flex-col gap-y-4">
               <input
                 type="text"
-                value={contactToEdit}
-                onChange={(e) => setContactToEdit(e.target.value)}
-                placeholder="Type here"
+                value={getFullName(
+                  contactToEdit.firstName,
+                  contactToEdit.lastName
+                )}
+                onChange={(e) =>
+                  setContactToEdit((previousValue) => ({
+                    ...previousValue,
+                    fullName: e.target.value,
+                  }))
+                }
+                placeholder="Fullname"
                 className="input input-bordered w-full"
               />
-
+              <input
+                type="number"
+                value={contactToEdit.age}
+                min="1"
+                onChange={(e) =>
+                  setContactToEdit((previousValue) => ({
+                    ...previousValue,
+                    age: e.target.value,
+                  }))
+                }
+                placeholder="Age"
+                className="input input-bordered w-full"
+              />
+              <input
+                type="text"
+                value={contactToEdit.photo}
+                onChange={(e) =>
+                  setContactToEdit((previousValue) => ({
+                    ...previousValue,
+                    photo: e.target.value,
+                  }))
+                }
+                placeholder="Photo URL"
+                className="input input-bordered w-full"
+              />
               <button type="submit" className="btn">
                 Submit
               </button>

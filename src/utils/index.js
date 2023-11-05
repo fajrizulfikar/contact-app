@@ -11,3 +11,7 @@ export function splitName(fullName) {
 
   return { firstName, lastName };
 }
+
+export function getFullName(firstName, lastName) {
+  return `${firstName} ${lastName ?? ""}`.trim();
+}
